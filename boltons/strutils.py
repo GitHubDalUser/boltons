@@ -1384,7 +1384,8 @@ def ellipsize(text, max_len=160, *, ellipsis='…'):
     end = cut_at
     while end > 0:
         ch = text[end - 1]
-        if ch.isspace() or ch in ',;:!?':
+        is_space_or_punctuation = ch.isspace() or ch in ',;:!?'
+        if is_space_or_punctuation:
             end -= 1
         elif ch == '.' and not _is_decimal_point(text, end - 1):
             # sentence-ending period (decimal points like "6.5%" are kept)
