@@ -127,3 +127,29 @@ Run all environments in parallel:
 ```bash
 uvx --with tox-uv tox -p auto
 ```
+### Building and testing without uv
+
+If you don't have `uv`, a standard Python 3.7+ install is enough.
+
+**macOS / Linux:**
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e . "pytest>=8"
+python -m pytest --doctest-modules boltons tests
+```
+
+**Windows (PowerShell):**
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -e . "pytest>=8"
+python -m pytest --doctest-modules boltons tests
+```
+
+The last command runs the unit tests in `tests/` and the doctests in the
+`boltons/` modules, matching what `tox` runs. All tests should pass.
