@@ -1328,6 +1328,14 @@ def human_readable_list(items: typing.Sequence[str], delimiter: str = ',', conju
     return f'{delimiter.join(items[:-1])}{delimiter if oxford else " "}{conjunction} {items[-1]}'
 
 
+def _is_decimal_point(text, index):
+    """Returns True if the ``.`` at *index* sits between two digits,
+    as in ``"6.5"``, meaning it is a decimal point rather than the end
+    of a sentence."""
+    return (index > 0
+            and text[index - 1].isdigit()
+            and text[index + 1].isdigit())
+
 
 def ellipsize(text, max_len=160, *, ellipsis='…'):
     """Truncate *text* to at most *max_len* characters, cutting at the
@@ -1378,10 +1386,8 @@ def ellipsize(text, max_len=160, *, ellipsis='…'):
         ch = text[end - 1]
         if ch.isspace() or ch in ',;:!?':
             end -= 1
-        elif ch == '.' and not (end > 1 and text[end - 2].isdigit()
-                                and text[end].isdigit()):
-            # sentence-ending period; a "." between two digits is a
-            # decimal point and is preserved (e.g. "6.5%")
+        elif ch == '.' and not _is_decimal_point(text, end - 1):
+            # sentence-ending period (decimal points like "6.5%" are kept)
             end -= 1
         else:
             break
