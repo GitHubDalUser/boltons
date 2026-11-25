@@ -920,6 +920,11 @@ def parse_int_list(range_string, delim=',', range_delim='-'):
     return sorted(output)
 
 
+def _format_int_range(contig_range, range_delim):
+    """Formats a run of contiguous integers as ``min<range_delim>max``."""
+    return '{:d}{}{:d}'.format(min(contig_range), range_delim, max(contig_range))
+
+
 def format_int_list(int_list, delim=',', range_delim='-', delim_space=False):
     """Returns a sorted range string from a list of positive integers
     (*int_list*). Contiguous ranges of integers are collapsed to min
@@ -958,10 +963,7 @@ def format_int_list(int_list, delim=',', range_delim='-', delim_space=False):
 
             # Current value is non-contiguous.
             elif delta > 1:
-                range_substr = '{:d}{}{:d}'.format(min(contig_range),
-                                                      range_delim,
-                                                      max(contig_range))
-                output.append(range_substr)
+                output.append(_format_int_range(contig_range, range_delim))
                 contig_range.clear()
                 contig_range.append(x)
 
@@ -996,10 +998,7 @@ def format_int_list(int_list, delim=',', range_delim='-', delim_space=False):
 
         # Last value is part of contiguous range.
         elif len(contig_range) > 1:
-            range_substr = '{:d}{}{:d}'.format(min(contig_range),
-                                                  range_delim,
-                                                  max(contig_range))
-            output.append(range_substr)
+            output.append(_format_int_range(contig_range, range_delim))
             contig_range.clear()
 
     if delim_space:
